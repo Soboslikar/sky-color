@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky & Color - Snimanje Dronom</title>
+    <style>
+        /* Osnovni reset i postavke */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Omogućava glatko skrolanje za linkove unutar stranice */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Moderniji font */
+            line-height: 1.7;
+            color: #333;
+            background-color: #f8f9fa; /* Još svjetlija siva, čista pozadina */
+        }
+
+        .container {
+            width: 90%; /* Malo širi container za moderniji izgled */
+            max-width: 1200px; /* Povećana maksimalna širina */
+            margin: auto;
+            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            color: #333;
+            padding: 15px 0; /* Malo smanjen padding */
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Suptilna sjena */
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header #logo {
+            height: 50px; /* Malo manji logo */
+            transition: transform 0.3s ease;
+        }
+        header #logo:hover {
+            transform: scale(1.05);
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-left: 25px; /* Malo veći razmak */
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #00446A; /* Tamno plava iz vašeg loga */
+            font-weight: 500; /* Malo lakši font-weight */
+            font-size: 1rem;
+            padding: 5px 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        header nav ul li a::after { /* Efekt podcrtavanja pri hoveru */
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #E63946; /* Crvena */
+            transition: width 0.3s ease;
+        }
+
+        header nav ul li a:hover {
+            color: #E63946;
+        }
+
+        header nav ul li a:hover::after {
+            width: 100%;
+        }
+
+
+        /* Sekcije */
+        section {
+            padding: 80px 0; /* Povećan padding za više zraka */
+            text-align: center;
+        }
+
+        section:nth-child(even) { /* Naizmjenične boje pozadine za sekcije */
+            /* background-color: #ffffff;  Ovo je default za body, pa mijenjamo za parne sekcije */
+        }
+        main > section:nth-of-type(odd) { /* Neparne sekcije unutar main-a */
+             background-color: #f8f9fa; /* Originalna pozadina tijela */
+        }
+        main > section:nth-of-type(even) { /* Parne sekcije unutar main-a */
+            background-color: #ffffff; /* Bijela za kontrast */
+        }
+        /* Posebno za hero, jer je prva i želimo joj drugu pozadinu */
+        #hero {
+            background: linear-gradient(rgba(0, 68, 106, 0.8), rgba(0, 68, 106, 0.8)), url('https://via.placeholder.com/1920x1080.png?text=Pozadinska+Slika+Drona') no-repeat center center/cover; /* Placeholder za pozadinsku sliku */
+            color: #fff;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+
+        section h1, section h2 {
+            margin-bottom: 25px;
+            color: #00446A;
+            font-weight: 600; /* Malo jači naslovi */
+        }
+
+        section h1 {
+            font-size: 2.8em; /* Veći naslov */
+        }
+
+        section h2 {
+            font-size: 2.2em; /* Veći podnaslov */
+            margin-bottom: 40px; /* Više prostora ispod podnaslova */
+        }
+
+        section p {
+            font-size: 1.1em;
+            color: #555;
+            max-width: 700px; /* Ograničavanje širine paragrafa za bolju čitljivost */
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Hero sekcija - specifični stilovi su već gore, ali osigurajmo da se primjene */
+        #hero h1 {
+            color: #fff;
+            font-size: 3.5em; /* Još veći naslov za hero */
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Sjena na tekstu */
+        }
+
+        #hero p {
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            color: #f0f0f0;
+            max-width: 600px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #E63946; /* Crvena boja */
+            color: #fff;
+            padding: 15px 30px; /* Veći gumb */
+            text-decoration: none;
+            border-radius: 8px; /* Zaobljeniji rubovi */
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .cta-button:hover {
+            background: #d62839; /* Tamnija crvena za hover */
+            transform: translateY(-2px); /* Mali pomak prema gore */
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Usluge sekcija */
+        #usluge { /* Osiguravamo da ima svoju pozadinu ako je druga parna/neparna */
+            /* background-color: #ffffff;  Ovo će biti kontrolirano s :nth-of-type */
+        }
+        .usluge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px; /* Veći razmak */
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .usluga-item {
+            background: #ffffff; /* Stavke usluga uvijek bijele radi kontrasta s pozadinom sekcije */
+            padding: 25px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .usluga-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .usluga-item img { /* Koristite prave ikonice ili manje slike ovdje */
+            max-width: 60px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .usluga-item h3 {
+            margin-bottom: 10px;
+            color: #00446A;
+            text-align: center;
+            font-size: 1.4em;
+        }
+
+        .usluga-item p {
+            font-size: 0.95em;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Portfolio sekcija */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .portfolio-grid img {
+            width: 100%;
+            height: 250px; /* Fiksna visina za uniformnost, objekt će se prilagoditi */
+            object-fit: cover; /* Da slika pokrije prostor bez distorzije */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .portfolio-grid img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Kontakt sekcija */
+        .contact-form {
+            max-width: 600px;
+            margin: 30px auto 0 auto;
+            background: #fff; /* Forma uvijek bijela */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical; /* Omogućava samo vertikalno mijenjanje veličine */
+        }
+
+        #kontakt .cta-button { /* Stilovi za gumb unutar kontakt forme */
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #kontakt p { /* Općeniti paragrafi unutar kontakt sekcije */
+            font-size: 1.1em;
+        }
+        #kontakt p a { /* Linkovi unutar paragrafa */
+            color: #E63946;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        #kontakt p a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* Footer */
+        footer {
+            background: #00293f; /* Tamnija plava, skoro crna */
+            color: #e0e0e0; /* Svjetliji tekst za bolji kontrast */
+            text-align: center;
+            padding: 30px 0; /* Više paddinga */
+            margin-top: 40px; /* Ako je zadnja sekcija bijela, ovaj margin-top je od #kontakt */
+        }
+
+        footer p {
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        /* Responzivnost */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            header #logo {
+                margin-bottom: 15px;
+            }
+            header nav ul {
+                justify-content: center; /* Centriranje linkova na manjim ekranima */
+                flex-wrap: wrap; /* Ako ima previše linkova, da se prebace u novi red */
+            }
+            header nav ul li {
+                margin: 0 10px 10px 10px; /* Prilagođen razmak za manje ekrane */
+            }
+
+            #hero h1 {
+                font-size: 2.5em;
+            }
+            #hero p {
+                font-size: 1.2em;
+            }
+
+            section h1 { font-size: 2.2em; }
+            section h2 { font-size: 1.8em; }
+
+            .container {
+                width: 95%; /* Još širi container na manjim ekranima */
+            }
+
+            .usluge-grid, .portfolio-grid {
+                grid-template-columns: 1fr; /* Jedan stupac na manjim ekranima */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <!-- Osigurajte da je 'logo.png' u istom folderu ili navedite ispravnu putanju -->
+            <img src="logo.png" alt="Sky & Color Logo" id="logo">
+            <nav>
+                <ul>
+                    <li><a href="#hero">Početna</a></li>
+                    <li><a href="#usluge">Usluge</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#kontakt">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="container">
+                <h1>Profesionalno Snimanje Dronom</h1>
+                <p>Zabilježite svijet iz nove perspektive s Sky & Color.</p>
+                <a href="#usluge" class="cta-button">Pogledajte naše usluge</a>
+            </div>
+        </section>
+
+        <section id="usluge">
+            <div class="container">
+                <h2>Naše Usluge</h2>
+                <div class="usluge-grid">
+                    <div class="usluga-item">
+                        <img src="https://via.placeholder.com/100x100.png?text=Icon1" alt="Snimanje nekretnina">
+                        <h3>Snimanje Nekretnina</h3>
+                        <p>Atraktivne zračne snimke vaših objekata.</p>
+                    </div>
+                    <div class="usluga-item">
+                        <img src="https://via.placeholder.com/100x100.png?text=Icon2" alt="Snimanje događaja">
+                        <h3>Snimanje Događaja</h3>
+                        <p>Zabilježite posebne trenutke iz zraka.</p>
+                    </div>
+                    <div class="usluga-item">
+                        <img src="https://via.placeholder.com/100x100.png?text=Icon3" alt="Promotivni video">
+                        <h3>Promotivni Video</h3>
+                        <p>Kreirajte impresivne video materijale.</p>
+                    </div>
+                     <div class="usluga-item">
+                        <img src="https://via.placeholder.com/100x100.png?text=Icon4" alt="Inspekcije">
+                        <h3>Inspekcije iz Zraka</h3>
+                        <p>Detaljni pregledi teško dostupnih mjesta.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio">
+            <div class="container">
+                <h2>Portfolio</h2>
+                <p>Pogledajte neke od naših radova.</p>
+                <div class="portfolio-grid">
+                    <!-- Ovdje ćete dodati slike ili video linkove -->
+                    <img src="https://via.placeholder.com/300x200.png?text=Primjer+Rada+1" alt="Primjer rada 1">
+                    <img src="https://via.placeholder.com/300x200.png?text=Primjer+Rada+2" alt="Primjer rada 2">
+                    <img src="https://via.placeholder.com/300x200.png?text=Primjer+Rada+3" alt="Primjer rada 3">
+                    <img src="https://via.placeholder.com/300x200.png?text=Primjer+Rada+4" alt="Primjer rada 4">
+                    <img src="https://via.placeholder.com/300x200.png?text=Primjer+Rada+5" alt="Primjer rada 5">
+                    <img src="https://via.placeholder.com/300x200.png?text=Primjer+Rada+6" alt="Primjer rada 6">
+                </div>
+            </div>
+        </section>
+
+        <section id="kontakt">
+            <div class="container">
+                <h2>Kontaktirajte Nas</h2>
+                <p>Imate pitanja ili želite ponudu? Javite nam se!</p>
+                <form action="#" method="POST" class="contact-form"> <!-- Za sada action="#" samo osvježava stranicu -->
+                    <div class="form-group">
+                        <label for="ime">Ime:</label>
+                        <input type="text" id="ime" name="ime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="poruka">Poruka:</label>
+                        <textarea id="poruka" name="poruka" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">Pošalji Poruku</button>
+                </form>
+                <p style="margin-top: 30px; font-weight: 500;">Ili nas kontaktirajte direktno:</p>
+                <p>Email: <a href="mailto:info@skyandcolor.com">info@skyandcolor.com</a></p>
+                <p>Telefon: +385 9X XXX XXXX (zamijenite s pravim brojem)</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© <span id="currentYear"></span> Sky & Color. Sva prava pridržana.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll za navigacijske linkove
+        document.querySelectorAll('header nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerOffset = document.querySelector('header').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        // Postavljanje trenutne godine u footeru
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
